@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WalkScroll | Scroll Less, Walk More</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #070912;
+            --primary: #00ff99;
+            --accent: #00ccff;
+            --text-main: #ffffff;
+            --text-dim: #a0a0b0;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 153, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0, 204, 255, 0.05) 0%, transparent 40%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 90%;
+            padding: 60px 20px;
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-container {
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px rgba(0, 255, 153, 0.3));
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.4;
+        }
+
+        .hero-text {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-container {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #000;
+            box-shadow: 0 10px 20px rgba(0, 255, 153, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 255, 153, 0.3);
+        }
+
+        .btn-outline {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 80px;
+            width: 100%;
+        }
+
+        .feature-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 32px;
+            border-radius: 20px;
+            text-align: left;
+            backdrop-filter: blur(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 255, 153, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .feature-desc {
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        footer {
+            margin-top: 100px;
+            padding: 40px 20px;
+            text-align: center;
+            color: #555;
+            font-size: 0.85rem;
+            border-top: 1px solid var(--glass-border);
+            width: 100%;
+        }
+
+        .legal-links {
+            margin-bottom: 20px;
+        }
+
+        .legal-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            margin: 0 15px;
+            transition: color 0.3s;
+        }
+
+        .legal-links a:hover {
+            color: var(--primary);
+        }
+
+        @media (max-width: 600px) {
+            .logo { font-size: 2.5rem; }
+            .tagline { font-size: 1.2rem; }
+            .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <h1 class="logo">WalkScroll</h1>
+            <p class="tagline">Scroll less. Walk more. Live better.</p>
+            <p class="hero-text">Transform your sedentary habits into active ones. WalkScroll blocks your favorite apps until you've reached your walking goals. Earn your screen time through physical activity.</p>
+        </div>
+
+        <div class="cta-container">
+            <a href="#" class="btn btn-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.525 18.250c-0.125 0.125-0.281 0.250-0.45 0.375s-0.344 0.219-0.525 0.281l-3.375-3.375 0.75-0.75s1.25-1.25 1.5-1.5zM20.275 8.125l-2.025-2.025s-1.25-1.25-1.5-1.5l0.75-0.75s0.625-0.625 1.5-1.5l1.625 1.625c1.438 1.438 1.438 3.75 0 5.188zM6.125 17.525c-1.438-1.438-1.438-3.75 0-5.188l5.125-5.125s1.25-1.25 1.5-1.5l0.75-0.75s0.438-0.438 1.188-1.188l2.025 2.025s0.438 0.438 1.188 1.188l-0.75 0.75s-1.25 1.25-1.5 1.5l-5.125 5.125c-1.438 1.438-3.75 1.438-5.188 0z"/></svg>
+                Google Play Store
+            </a>
+            <a href="privacy_policy.html" class="btn btn-outline">Privacy Policy</a>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <span class="feature-icon">⛓️</span>
+                <h3 class="feature-title">App Gating</h3>
+                <p class="feature-desc">Temporarily block high-scrolling apps until you finish your physical task.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📈</span>
+                <h3 class="feature-title">Smart Goals</h3>
+                <p class="feature-desc">Dynamic daily and weekly step tracking synced with Health Connect.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🔋</span>
+                <h3 class="feature-title">Time Banking</h3>
+                <p class="feature-desc">Save up your steps and convert them into entertainment time for later.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="legal-links">
+            <a href="privacy_policy.html">Privacy Policy</a>
+            <a href="mailto:support@amikastudio.com">Support</a>
+        </div>
+        <p>&copy; 2025 Amika Studio. All rights reserved.</p>
+    </footer>
+</body>
+</html>
+
