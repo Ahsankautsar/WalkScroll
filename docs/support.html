@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WalkScroll Support | Help Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #070912;
+            --primary: #00ff99;
+            --accent: #00ccff;
+            --text-main: #ffffff;
+            --text-dim: #a0a0b0;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 153, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 204, 255, 0.04) 0%, transparent 40%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 800px;
+            width: 90%;
+            margin: 60px auto;
+            flex: 1;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+            margin-bottom: 30px;
+            transition: opacity 0.2s;
+        }
+        .back-link:hover {
+            opacity: 0.8;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            font-weight: 300;
+        }
+        .section {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(20px);
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 12px;
+        }
+        /* FAQ Styling */
+        .faq-item {
+            margin-bottom: 24px;
+        }
+        .faq-item:last-child {
+            margin-bottom: 0;
+        }
+        .faq-question {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+        .faq-answer {
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+        /* Contact Details */
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+        }
+        .contact-icon {
+            font-size: 1.5rem;
+        }
+        .contact-text h4 {
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+        .contact-text p {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+        .contact-text a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .contact-text a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            padding: 40px 20px;
+            text-align: center;
+            color: #555;
+            font-size: 0.85rem;
+            border-top: 1px solid var(--glass-border);
+            width: 100%;
+        }
+        .legal-links {
+            margin-bottom: 20px;
+        }
+        .legal-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            margin: 0 15px;
+            transition: color 0.3s;
+        }
+        .legal-links a:hover {
+            color: var(--primary);
+        }
+        @media (max-width: 600px) {
+            .title { font-size: 2rem; }
+            .section { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Back to Home
+        </a>
+        <div class="header">
+            <h1 class="title">WalkScroll Support</h1>
+            <p class="subtitle">How can we help you get moving today?</p>
+        </div>
+        <div class="section">
+            <h2 class="section-title">Frequently Asked Questions (FAQ)</h2>
+            
+            <div class="faq-item">
+                <p class="faq-question">How does WalkScroll track my steps?</p>
+                <p class="faq-answer">On iOS, WalkScroll securely integrates with Apple Health to read your active steps. On Android, it connects via Google Health Connect. We do not track your real-time location or share your health data with anyone.</p>
+            </div>
+            <div class="faq-item">
+                <p class="faq-question">Why does the app ask for Screen Time / Family Controls permissions?</p>
+                <p class="faq-answer">WalkScroll uses Apple's native Screen Time API (Family Controls) on iOS and Usage/Overlay permissions on Android to restrict access to your selected apps. This allows the app to block social media and games until you finish your step goals, without inspecting your private app usage content.</p>
+            </div>
+            <div class="faq-item">
+                <p class="faq-question">What is the "Time Bank"?</p>
+                <p class="faq-answer">The Time Bank allows you to bank steps that you've walked beyond your goal and save them. You can later exchange these banked steps to unlock restricted apps for a short period when you need to use them without doing extra walking.</p>
+            </div>
+            <div class="faq-item">
+                <p class="faq-question">What should I do if my steps aren't updating?</p>
+                <p class="faq-answer">First, open your Apple Health (iOS) or Health Connect (Android) app to check if your latest steps have loaded there. WalkScroll syncs automatically every time you open the app. If steps are still missing, verify that WalkScroll has been granted Health permissions in your device settings.</p>
+            </div>
+        </div>
+        <div class="section">
+            <h2 class="section-title">Get in Touch</h2>
+            <div class="contact-info">
+                <div class="contact-method">
+                    <span class="contact-icon">✉️</span>
+                    <div class="contact-text">
+                        <h4>Email Support</h4>
+                        <p>For bug reports, feedback, or general inquiries, email us at <a href="mailto:support@amikastudio.com">support@amikastudio.com</a></p>
+                    </div>
+                </div>
+                <div class="contact-method">
+                    <span class="contact-icon">🐙</span>
+                    <div class="contact-text">
+                        <h4>GitHub Issues</h4>
+                        <p>Report technical bugs or request features directly on our <a href="https://github.com/Ahsankautsar/WalkScroll/issues" target="_blank">GitHub Issues page</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="legal-links">
+            <a href="index.html">Home</a>
+            <a href="privacy_policy.html">Privacy Policy</a>
+        </div>
+        <p>&copy; 2025 Ahsan Studio. All rights reserved.</p>
+    </footer>
+</body>
+</html>
