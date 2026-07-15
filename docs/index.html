@@ -533,16 +533,30 @@
 
     if (refCode) {
         // Show referral badge
-        document.getElementById('referralBadge').style.display = 'inline-flex';
-        document.getElementById('refName').textContent = refCode;
+        const referralBadge = document.getElementById('referralBadge');
+        if (referralBadge) {
+            referralBadge.style.display = 'inline-flex';
+            document.getElementById('refName').textContent = refCode;
+        }
 
         // Show "Open App" button
         const openAppBtn = document.getElementById('openAppBtn');
-        openAppBtn.style.display = 'inline-block';
-        openAppBtn.href = 'walkscroll://?ref=' + encodeURIComponent(refCode);
-        openAppBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            window.location.href = 'walkscroll://?ref=' + encodeURIComponent(refCode);
+        if (openAppBtn) {
+            openAppBtn.style.display = 'inline-block';
+            openAppBtn.href = 'walkscroll://?ref=' + encodeURIComponent(refCode);
+            openAppBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Copy referral code to clipboard before opening app
+                navigator.clipboard.writeText('walkscroll_ref:' + refCode).catch(function(){});
+                window.location.href = 'walkscroll://?ref=' + encodeURIComponent(refCode);
+            });
+        }
+
+        // Copy referral code to clipboard when ANY store download button is clicked
+        document.querySelectorAll('.store-badge, .nav-cta').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                navigator.clipboard.writeText('walkscroll_ref:' + refCode).catch(function(){});
+            });
         });
 
         // Try to auto-open the app (works if installed)
