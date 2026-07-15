@@ -1,250 +1,475 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WalkScroll | Scroll Less, Walk More</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-dark: #070912;
-            --primary: #00ff99;
-            --accent: #00ccff;
-            --text-main: #ffffff;
-            --text-dim: #a0a0b0;
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WalkScroll — Walk to Unlock Your Apps &amp; Earn Screen Time</title>
+<meta name="description" content="WalkScroll locks your distracting apps and unlocks them with steps. Walk to earn screen time on iPhone and Android — a healthier way to scroll. Free download.">
+<!-- Real domain deployed -->
+<link rel="canonical" href="https://ahsankautsar.github.io/WalkScroll/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="WalkScroll — Walk to Unlock Your Apps &amp; Earn Screen Time">
+<meta property="og:description" content="Lock your distracting apps and earn screen time by walking. Free on the App Store and Google Play.">
+<meta property="og:url" content="https://ahsankautsar.github.io/WalkScroll/">
+<meta property="og:image" content="https://play-lh.googleusercontent.com/sHK9EMW0OIkxqG73v-c95TiNlYCoDKVEyoLoF025U0_0Lk1JKI9uh1vpMHjX4BbBPW8iLQls0vd5YboKGeye=w512">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="WalkScroll — Walk to Unlock Your Apps &amp; Earn Screen Time">
+<meta name="twitter:description" content="Lock your distracting apps and earn screen time by walking. Free on iPhone and Android.">
+<meta name="twitter:image" content="https://play-lh.googleusercontent.com/sHK9EMW0OIkxqG73v-c95TiNlYCoDKVEyoLoF025U0_0Lk1JKI9uh1vpMHjX4BbBPW8iLQls0vd5YboKGeye=w512">
+<link rel="icon" href="https://play-lh.googleusercontent.com/sHK9EMW0OIkxqG73v-c95TiNlYCoDKVEyoLoF025U0_0Lk1JKI9uh1vpMHjX4BbBPW8iLQls0vd5YboKGeye=w48">
+<link rel="apple-touch-icon" href="https://play-lh.googleusercontent.com/sHK9EMW0OIkxqG73v-c95TiNlYCoDKVEyoLoF025U0_0Lk1JKI9uh1vpMHjX4BbBPW8iLQls0vd5YboKGeye=w180">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<!-- ===== ANALYTICS PLACEHOLDERS — replace before launch =====
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+<meta name="google-site-verification" content="YOUR_SEARCH_CONSOLE_TOKEN">
+============================================================ -->
 
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 20% 30%, rgba(0, 255, 153, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(0, 204, 255, 0.05) 0%, transparent 40%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container {
-            max-width: 1000px;
-            width: 90%;
-            padding: 60px 20px;
-            text-align: center;
-            animation: fadeIn 1s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .logo-container {
-            margin-bottom: 40px;
-        }
-
-        .logo {
-            font-size: 3.5rem;
-            font-weight: 900;
-            letter-spacing: -2px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px rgba(0, 255, 153, 0.3));
-        }
-
-        .tagline {
-            font-size: 1.5rem;
-            font-weight: 300;
-            color: var(--text-dim);
-            margin-bottom: 20px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.4;
-        }
-
-        .hero-text {
-            font-size: 1.1rem;
-            color: var(--text-dim);
-            line-height: 1.6;
-            margin-bottom: 40px;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .cta-container {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 16px 32px;
-            border-radius: 12px;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            font-size: 1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: #000;
-            box-shadow: 0 10px 20px rgba(0, 255, 153, 0.2);
-        }
-
-        .btn-primary:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 30px rgba(0, 255, 153, 0.3);
-        }
-
-        .btn-outline {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            backdrop-filter: blur(10px);
-        }
-
-        .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: var(--primary);
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            margin-top: 80px;
-            width: 100%;
-        }
-
-        .feature-card {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            padding: 32px;
-            border-radius: 20px;
-            text-align: left;
-            backdrop-filter: blur(20px);
-            transition: transform 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(0, 255, 153, 0.3);
-        }
-
-        .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        .feature-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--primary);
-        }
-
-        .feature-desc {
-            font-size: 0.95rem;
-            color: var(--text-dim);
-            line-height: 1.5;
-        }
-
-        footer {
-            margin-top: 100px;
-            padding: 40px 20px;
-            text-align: center;
-            color: #555;
-            font-size: 0.85rem;
-            border-top: 1px solid var(--glass-border);
-            width: 100%;
-        }
-
-        .legal-links {
-            margin-bottom: 20px;
-        }
-
-        .legal-links a {
-            color: var(--text-dim);
-            text-decoration: none;
-            margin: 0 15px;
-            transition: color 0.3s;
-        }
-
-        .legal-links a:hover {
-            color: var(--primary);
-        }
-
-        @media (max-width: 600px) {
-            .logo { font-size: 2.5rem; }
-            .tagline { font-size: 1.2rem; }
-            .btn { width: 100%; justify-content: center; }
-        }
-    </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  "name": "WalkScroll",
+  "alternateName": ["WalkScroll: Walk to Unlock", "WalkScroll: Screen Time Fit"],
+  "operatingSystem": "iOS 16.0 or later, Android",
+  "applicationCategory": "HealthApplication",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "description": "Free to download. Optional WalkScroll Pro subscription on iOS ($3.99/month or $24.99/year) and Premium upgrade on Android."
+  },
+  "installUrl": [
+    "https://apps.apple.com/us/app/walkscroll-walk-to-unlock/id6783172097",
+    "https://play.google.com/store/apps/details?id=com.amikastudio.walk_scroll"
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "Amika Studio"
+  },
+  "description": "WalkScroll locks your most distracting apps and unlocks them with steps. Walk to earn screen time; when your earned minutes run out, the apps lock again until you move."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is WalkScroll free?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Yes. WalkScroll is free to download on both the App Store and Google Play. On iOS, an optional WalkScroll Pro subscription costs $3.99 per month or $24.99 per year. On Android, the free version contains ads, and a Premium upgrade unlocks unlimited target apps, a 120-minute time bank, and weekly history and challenges."}
+    },
+    {
+      "@type": "Question",
+      "name": "How does WalkScroll track my steps?",
+      "acceptedAnswer": {"@type": "Answer", "text": "On iPhone, WalkScroll uses Apple Health and the device's Motion & Fitness sensors — no extra apps needed. On Android, it reads steps through Google Health Connect for battery-efficient tracking. WalkScroll does not track your location."}
+    },
+    {
+      "@type": "Question",
+      "name": "How does WalkScroll block apps?",
+      "acceptedAnswer": {"@type": "Answer", "text": "On iOS, WalkScroll uses Apple's native Screen Time API (Family Controls) to restrict the apps you select. On Android, it uses Usage Access and overlay permissions to gate your chosen apps until you've walked enough."}
+    },
+    {
+      "@type": "Question",
+      "name": "What happens when my earned screen time runs out?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Your selected apps lock automatically. Walk again to earn more minutes, spend saved minutes from your Time Bank, or on Android use an Emergency Credit or watch a short rewarded ad for quick access."}
+    },
+    {
+      "@type": "Question",
+      "name": "Is my health data shared with anyone?",
+      "acceptedAnswer": {"@type": "Answer", "text": "No. Your step count, selected apps, usage time, and preferences are stored locally on your device only. Step data is never uploaded, shared, or sent to any server, according to the developer's privacy policy."}
+    },
+    {
+      "@type": "Question",
+      "name": "Which devices does WalkScroll support?",
+      "acceptedAnswer": {"@type": "Answer", "text": "WalkScroll requires iOS 16.0 or later on iPhone and works with Apple Watch. On Android, it works with devices that support Google Health Connect."}
+    }
+  ]
+}
+</script>
 </head>
 <body>
-    <div class="container">
-        <div class="logo-container">
-            <h1 class="logo">WalkScroll</h1>
-            <p class="tagline">Scroll less. Walk more. Live better.</p>
-            <p class="hero-text">Transform your sedentary habits into active ones. WalkScroll blocks your favorite apps until you've reached your walking goals. Earn your screen time through physical activity.</p>
-        </div>
+<a class="skip-link" href="#main">Skip to content</a>
 
-        <div class="cta-container">
-            <a href="#" class="btn btn-primary">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.525 18.250c-0.125 0.125-0.281 0.250-0.45 0.375s-0.344 0.219-0.525 0.281l-3.375-3.375 0.75-0.75s1.25-1.25 1.5-1.5zM20.275 8.125l-2.025-2.025s-1.25-1.25-1.5-1.5l0.75-0.75s0.625-0.625 1.5-1.5l1.625 1.625c1.438 1.438 1.438 3.75 0 5.188zM6.125 17.525c-1.438-1.438-1.438-3.75 0-5.188l5.125-5.125s1.25-1.25 1.5-1.5l0.75-0.75s0.438-0.438 1.188-1.188l2.025 2.025s0.438 0.438 1.188 1.188l-0.75 0.75s-1.25 1.25-1.5 1.5l-5.125 5.125c-1.438 1.438-3.75 1.438-5.188 0z"/></svg>
-                Google Play Store
-            </a>
-            <a href="privacy-policy.html" class="btn btn-outline">Privacy Policy</a>
-        </div>
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="/">
+      <img src="https://play-lh.googleusercontent.com/sHK9EMW0OIkxqG73v-c95TiNlYCoDKVEyoLoF025U0_0Lk1JKI9uh1vpMHjX4BbBPW8iLQls0vd5YboKGeye=w96" alt="WalkScroll app icon" width="34" height="34">
+      WalkScroll
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu">☰</button>
+    <ul class="nav-links" id="nav-menu">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#screenshots">Screenshots</a></li>
+      <li><a href="#guides">Guides</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a class="btn btn-primary btn-small nav-cta" href="https://apps.apple.com/us/app/walkscroll-walk-to-unlock/id6783172097" data-event="app_store_click" data-location="nav">Download WalkScroll</a>
+  </div>
+</header>
 
-        <div class="features">
-            <div class="feature-card">
-                <span class="feature-icon">⛓️</span>
-                <h3 class="feature-title">App Gating</h3>
-                <p class="feature-desc">Temporarily block high-scrolling apps until you finish your physical task.</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">📈</span>
-                <h3 class="feature-title">Smart Goals</h3>
-                <p class="feature-desc">Dynamic daily and weekly step tracking synced with Health Connect.</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">🔋</span>
-                <h3 class="feature-title">Time Banking</h3>
-                <p class="feature-desc">Save up your steps and convert them into entertainment time for later.</p>
-            </div>
+<main id="main">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Free on iPhone &amp; Android</span>
+        <h1><span class="hl-step">Walk</span> to unlock your apps. Earn screen time with every <span class="hl-step">step</span>.</h1>
+        <p class="hero-sub">WalkScroll locks your most distracting apps — social media, video, games — and unlocks them with the steps you take. No willpower battles, no ignored timers. Move first, then scroll.</p>
+
+        <ul class="loop" aria-label="The WalkScroll loop: walk, earn minutes, scroll, apps lock, then walk again">
+          <li><span class="node node--walk">🚶 Walk</span></li>
+          <li aria-hidden="true"><span class="link"></span></li>
+          <li><span class="node node--earn">⏱ Earn minutes</span></li>
+          <li aria-hidden="true"><span class="link"></span></li>
+          <li><span class="node node--scroll">📱 Scroll</span></li>
+          <li aria-hidden="true"><span class="link"></span></li>
+          <li><span class="node node--lock">🔒 Apps lock</span></li>
+          <li aria-hidden="true"><span class="link link--back"><span class="back-label">…and walk again</span></span></li>
+        </ul>
+
+        <div class="store-badges">
+          <a class="store-badge" href="https://apps.apple.com/us/app/walkscroll-walk-to-unlock/id6783172097" data-event="hero_download_click" data-platform="ios">
+            <small>Download on the</small><strong>App Store</strong>
+          </a>
+          <a class="store-badge" href="https://play.google.com/store/apps/details?id=com.amikastudio.walk_scroll" data-event="hero_download_click" data-platform="android">
+            <small>Get it on</small><strong>Google Play</strong>
+          </a>
         </div>
+        <p class="hero-note">Free download · Your step data stays on your device</p>
+        <p><a class="btn btn-secondary btn-small" href="#how-it-works">See how it works</a></p>
+      </div>
+
+      <div class="phone">
+        <img src="https://play-lh.googleusercontent.com/MHFu1Ko9aLf09h4UFB7BHW4JMFH7sgYfY9UYEmxfDXbLHlipeJqCsE4f1HMKzCYxEo1eINhFV8OaqP9oYl-zQZA=w720" alt="WalkScroll's dark neon-themed main screen showing steps converting into earned scroll minutes" width="300" height="533" fetchpriority="high">
+      </div>
     </div>
+  </section>
 
-    <footer>
-        <div class="legal-links">
-            <a href="privacy-policy.html">Privacy Policy</a>
-            <a href="mailto:support@amikastudio.com">Support</a>
+  <!-- ================= PROBLEM / SOLUTION ================= -->
+  <section id="problem" aria-labelledby="problem-heading">
+    <div class="wrap">
+      <span class="eyebrow eyebrow--amber">The problem</span>
+      <h2 id="problem-heading">Screen time limits are easy to ignore. Steps aren't.</h2>
+      <div class="split">
+        <div class="panel panel--problem">
+          <h3>Why ordinary app limits fail</h3>
+          <ul>
+            <li>You open Instagram or TikTok on autopilot and an hour disappears — sitting down.</li>
+            <li>Built-in timers show a warning… next to an <em>"Ignore Limit"</em> button. One tap and you're back in.</li>
+            <li>Hard blockers feel punitive, so you delete them after a bad day.</li>
+            <li>Meanwhile, the walk you meant to take keeps getting postponed.</li>
+          </ul>
         </div>
-        <p>&copy; 2025 Amika Studio. All rights reserved.</p>
-    </footer>
+        <div class="panel panel--solution">
+          <h3>The WalkScroll approach</h3>
+          <ul>
+            <li>Scrolling isn't banned — it's <strong>earned</strong>. Every step adds to your scroll minutes.</li>
+            <li>The lock is automatic and the exit is always the same: <strong>go for a walk</strong>.</li>
+            <li>Instead of fighting your phone habit, WalkScroll redirects it into a walking habit.</li>
+            <li>The result: less sedentary scrolling, more daily movement — without going cold turkey.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURES ================= -->
+  <section id="features" aria-labelledby="features-heading">
+    <div class="wrap">
+      <span class="eyebrow">Features</span>
+      <h2 id="features-heading">Everything you need to trade steps for screen time</h2>
+      <p class="muted">Built on the native health and screen-time systems of each platform — no workarounds, no extra tracker apps.</p>
+      <div class="grid grid-3">
+        <div class="card card--icon">
+          <div class="icon" aria-hidden="true">🔒</div>
+          <span class="tag tag--both">iPhone &amp; Android</span>
+          <h3>App gating that actually holds</h3>
+          <p>Pick the apps that distract you most. On iPhone, WalkScroll restricts them through Apple's native Screen Time API; on Android, through Usage Access. When your minutes run out, they lock until you move.</p>
+        </div>
+        <div class="card card--icon">
+          <div class="icon" aria-hidden="true">👟</div>
+          <span class="tag tag--both">iPhone &amp; Android</span>
+          <h3>Automatic step tracking</h3>
+          <p>Steps count through Apple Health on iPhone and Google Health Connect on Android — battery-efficient and hands-off. Start walking, pocket your phone, and your scroll minutes grow on their own.</p>
+        </div>
+        <div class="card card--icon">
+          <div class="icon" aria-hidden="true">🏦</div>
+          <span class="tag tag--both">iPhone &amp; Android</span>
+          <h3>Time Bank</h3>
+          <p>Walked past your goal? Bank the extra. Saved minutes let you unlock your apps later on a busy day — flexibility built in, so one hectic afternoon doesn't break the system.</p>
+        </div>
+        <div class="card card--icon">
+          <div class="icon" aria-hidden="true">🎯</div>
+          <span class="tag tag--ios">iPhone</span>
+          <h3>Goals, challenges &amp; Free Days</h3>
+          <p>Set daily and weekly step goals, take on weekly challenges, and earn Free Day rewards. A Balance Score tracks how healthy your phone-and-movement mix is over time.</p>
+        </div>
+        <div class="card card--icon">
+          <div class="icon" aria-hidden="true">📊</div>
+          <span class="tag tag--android">Android</span>
+          <h3>Neon progress charts</h3>
+          <p>Daily and weekly consistency charts in a premium neon theme show your streaks at a glance — so the habit you're building is something you can actually see.</p>
+        </div>
+        <div class="card card--icon">
+          <div class="icon" aria-hidden="true">🆘</div>
+          <span class="tag tag--android">Android</span>
+          <h3>Emergency Credit</h3>
+          <p>Genuinely need an app right now? Spend an Emergency Credit or watch a short rewarded ad to get back in — an honest escape hatch that keeps the system realistic.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BENEFITS ================= -->
+  <section id="benefits" aria-labelledby="benefits-heading">
+    <div class="wrap">
+      <span class="eyebrow eyebrow--cyan">Why it works</span>
+      <h2 id="benefits-heading">One habit funds the other</h2>
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>Move more, automatically</h3>
+          <p>The urge to check your phone becomes the trigger to take a walk. You stop needing motivation to move — your own scrolling habit supplies it.</p>
+        </div>
+        <div class="card">
+          <h3>Scroll with a clear conscience</h3>
+          <p>The minutes you spend on social apps are minutes you walked for. Screen time stops being something to feel guilty about and becomes something you earned.</p>
+        </div>
+        <div class="card">
+          <h3>No cold turkey required</h3>
+          <p>Time Bank savings, Free Day rewards, and Emergency Credit keep the system flexible. WalkScroll is designed for balance, not abstinence — which is why it's easier to stick with.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= HOW IT WORKS ================= -->
+  <section id="how-it-works" aria-labelledby="how-heading">
+    <div class="wrap">
+      <span class="eyebrow">How it works</span>
+      <h2 id="how-heading">Four steps to smarter scrolling</h2>
+      <ol class="steps">
+        <li>
+          <h3>Choose your target apps</h3>
+          <p>Select the apps that eat your time — social media, video, games. These are the ones WalkScroll will gate.</p>
+        </li>
+        <li>
+          <h3>Walk to earn minutes</h3>
+          <p>Tap "Start Walking" and pocket your phone. Apple Health or Health Connect counts your steps and converts them into scroll minutes.</p>
+        </li>
+        <li>
+          <h3>Spend your earned time</h3>
+          <p>Open your apps as usual — a balance of earned minutes ticks down while you use them.</p>
+        </li>
+        <li>
+          <h3>Apps lock, you move again</h3>
+          <p>When the balance hits zero, your target apps lock automatically. The way back in is always the same: another walk.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================= SCREENSHOTS ================= -->
+  <section id="screenshots" aria-labelledby="shots-heading">
+    <div class="wrap">
+      <span class="eyebrow eyebrow--cyan">Inside the app</span>
+      <h2 id="shots-heading">A dark, neon interface built for glanceability</h2>
+      <div class="shots">
+        <figure>
+          <img loading="lazy" width="360" height="640" src="https://play-lh.googleusercontent.com/MHFu1Ko9aLf09h4UFB7BHW4JMFH7sgYfY9UYEmxfDXbLHlipeJqCsE4f1HMKzCYxEo1eINhFV8OaqP9oYl-zQZA=w720" alt="WalkScroll home screen with step count and earned scroll minutes in the dark neon theme">
+          <figcaption>Your steps and earned scroll minutes, front and centre.</figcaption>
+        </figure>
+        <figure>
+          <img loading="lazy" width="360" height="640" src="https://play-lh.googleusercontent.com/a46xnLXKsLBmphWr9PQUyVY34lwXgDB8O7EKWocFsvu9ISTEqAzcj112EntRf6rVg-PVeLykBtimq8Nm23vQlw=w720" alt="WalkScroll screen for selecting which target apps to gate behind a step requirement">
+          <figcaption>Pick which apps to gate — the rest of your phone stays untouched.</figcaption>
+        </figure>
+        <figure>
+          <img loading="lazy" width="360" height="640" src="https://play-lh.googleusercontent.com/d0FSdspELFp91Nz3gXdViJRisa1AlmPKGm_-rCEizhrBinld-Sc9zO2H99D70ezbCaTGrANuy_g_tZOwQGOo6g=w720" alt="WalkScroll progress charts showing daily and weekly walking consistency">
+          <figcaption>Neon progress charts make your consistency visible.</figcaption>
+        </figure>
+        <figure>
+          <img loading="lazy" width="360" height="640" src="https://play-lh.googleusercontent.com/ATeotPS7l5oE8-CdNOFd-OQUpw0-kNaySBkd4brSIIKL0BXERuccw47HwT7u9Y_zKKn-zMOnQN8TeWB7rBRG=w720" alt="WalkScroll lock screen shown when earned screen time has run out">
+          <figcaption>Out of minutes? The lock kicks in — until your next walk.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= USE CASES ================= -->
+  <section id="use-cases" aria-labelledby="usecases-heading">
+    <div class="wrap">
+      <span class="eyebrow">Who it's for</span>
+      <h2 id="usecases-heading">Four ways people use WalkScroll</h2>
+      <div class="grid grid-2">
+        <div class="card usecase">
+          <p class="who">The doomscroller</p>
+          <h3>Break the endless-scroll loop</h3>
+          <p>You open a social app "for a second" and surface an hour later. WalkScroll puts a price on that hour — in steps — so the loop breaks itself. <a href="guides/how-to-stop-doomscrolling.html">Read: how to stop doomscrolling</a></p>
+        </div>
+        <div class="card usecase">
+          <p class="who">The would-be walker</p>
+          <h3>Finally hit a daily step goal</h3>
+          <p>You've tried step trackers, but numbers alone don't motivate. Tying steps to something you already want — screen time — gives every walk an immediate payoff. <a href="guides/how-to-build-a-walking-habit.html">Read: building a walking habit that sticks</a></p>
+        </div>
+        <div class="card usecase">
+          <p class="who">The detoxer</p>
+          <h3>Run a structured digital detox</h3>
+          <p>Full phone bans rarely last. WalkScroll's earn-to-scroll loop is a sustainable middle path: less screen time overall, and every remaining minute is paid for with movement. <a href="guides/how-to-reduce-screen-time.html">Read: how to reduce screen time</a></p>
+        </div>
+        <div class="card usecase">
+          <p class="who">The limit-ignorer</p>
+          <h3>Make app limits you can't just dismiss</h3>
+          <p>If you tap "Ignore Limit" on every Screen Time warning, you need a limit with a real condition attached. Walking is a condition you can't fake — but one that's always achievable. <a href="guides/block-distracting-apps.html">Read: how to block distracting apps</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= GUIDES ================= -->
+  <section id="guides" aria-labelledby="guides-heading">
+    <div class="wrap">
+      <span class="eyebrow eyebrow--cyan">Guides</span>
+      <h2 id="guides-heading">Learn the habits behind the app</h2>
+      <div class="grid grid-3">
+        <div class="card guide-card">
+          <p class="intent">Reduce screen time</p>
+          <h3>How to Reduce Screen Time (Without Going Cold Turkey)</h3>
+          <p>Seven practical strategies that work on iPhone and Android — from friction tricks to replacement habits.</p>
+          <a href="guides/how-to-reduce-screen-time.html">Read the guide</a>
+        </div>
+        <div class="card guide-card">
+          <p class="intent">Stop doomscrolling</p>
+          <h3>How to Stop Doomscrolling at Night</h3>
+          <p>Why the scroll loop is so hard to exit, and a step-by-step plan for reclaiming your evenings.</p>
+          <a href="guides/how-to-stop-doomscrolling.html">Read the guide</a>
+        </div>
+        <div class="card guide-card">
+          <p class="intent">Earn screen time</p>
+          <h3>How to Earn Screen Time by Walking</h3>
+          <p>The full walk-to-unlock setup on iPhone and Android, plus tips for choosing goals you'll actually keep.</p>
+          <a href="guides/earn-screen-time-by-walking.html">Read the guide</a>
+        </div>
+        <div class="card guide-card">
+          <p class="intent">Build the habit</p>
+          <h3>How to Build a Daily Walking Habit</h3>
+          <p>Habit-stacking, realistic step goals, and how to make walking the easiest choice in your day.</p>
+          <a href="guides/how-to-build-a-walking-habit.html">Read the guide</a>
+        </div>
+        <div class="card guide-card">
+          <p class="intent">Block apps</p>
+          <h3>How to Block Distracting Apps on iPhone &amp; Android</h3>
+          <p>Built-in Screen Time and Digital Wellbeing vs. third-party blockers — what works, what's easy to bypass.</p>
+          <a href="guides/block-distracting-apps.html">Read the guide</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section id="faq" aria-labelledby="faq-heading">
+    <div class="wrap">
+      <span class="eyebrow">FAQ</span>
+      <h2 id="faq-heading">Questions before you download</h2>
+      <div class="faq">
+        <details data-event="faq_expand" data-question="pricing">
+          <summary>Is WalkScroll free?</summary>
+          <p>Yes — WalkScroll is free to download on both the App Store and Google Play. On iPhone, an optional WalkScroll Pro subscription costs $3.99/month or $24.99/year. On Android, the free version contains ads; a Premium upgrade unlocks unlimited target apps, a 120-minute time bank, and weekly history &amp; challenges.</p>
+        </details>
+        <details data-event="faq_expand" data-question="tracking">
+          <summary>How does WalkScroll track my steps?</summary>
+          <p>On iPhone, through Apple Health and your device's Motion &amp; Fitness sensors — no extra apps needed. On Android, through Google Health Connect, which is battery-efficient. WalkScroll never tracks your location. <a href="guides/earn-screen-time-by-walking.html">Learn more about the step-to-screen-time setup</a>.</p>
+        </details>
+        <details data-event="faq_expand" data-question="blocking">
+          <summary>How does the app blocking actually work?</summary>
+          <p>On iPhone, WalkScroll uses Apple's native Screen Time API (Family Controls) — the same system iOS itself uses for restrictions. On Android, it uses Usage Access and overlay permissions to gate your selected apps. <a href="guides/block-distracting-apps.html">Learn more about blocking distracting apps</a>.</p>
+        </details>
+        <details data-event="faq_expand" data-question="privacy">
+          <summary>Can WalkScroll see what I do in my apps, or share my health data?</summary>
+          <p>No. On iOS, app selections are handled as opaque tokens by the system, so WalkScroll can't even see which specific apps you chose. Your step count, app selections, usage time, and preferences are stored locally on your device and are never uploaded or shared, per the <a href="https://ahsankautsar.github.io/WalkScroll/privacy-policy.html">privacy policy</a>.</p>
+        </details>
+        <details data-event="faq_expand" data-question="time-runs-out">
+          <summary>What happens when my earned time runs out?</summary>
+          <p>Your target apps lock automatically. To get back in, walk to earn more minutes, spend saved minutes from your Time Bank, or — on Android — use an Emergency Credit or watch a short rewarded ad.</p>
+        </details>
+        <details data-event="faq_expand" data-question="time-bank">
+          <summary>What is the Time Bank?</summary>
+          <p>Steps you walk beyond your goal aren't wasted — you can bank them and exchange them later for unlock time when you need your apps without walking first. On Android, Premium extends the bank to 120 minutes.</p>
+        </details>
+        <details data-event="faq_expand" data-question="devices">
+          <summary>Which devices are supported?</summary>
+          <p>iPhone running iOS 16.0 or later, with Apple Watch support. On Android, any device that supports Google Health Connect. The iOS app is currently available in English.</p>
+        </details>
+        <details data-event="faq_expand" data-question="troubleshooting">
+          <summary>My steps aren't updating — what should I check?</summary>
+          <p>On Android, open the Health Connect app first to confirm your latest steps loaded there. On iPhone, steps track in real time. In both cases, check that WalkScroll has its permissions granted (Motion &amp; Fitness on iOS; Health Connect on Android) in system settings. Still stuck? <a href="https://ahsankautsar.github.io/WalkScroll/support.html">Visit the support page</a>.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FINAL CTA ================= -->
+  <section class="final-cta" id="download" aria-labelledby="cta-heading">
+    <div class="wrap">
+      <span class="eyebrow">Get started</span>
+      <h2 id="cta-heading">Your next scroll starts with a walk</h2>
+      <p class="muted">Download WalkScroll free, pick the apps that distract you most, and let your steps do the unlocking. Tapping a button below opens the official store listing on your device.</p>
+      <div class="store-badges">
+        <a class="store-badge" href="https://apps.apple.com/us/app/walkscroll-walk-to-unlock/id6783172097" data-event="final_cta_click" data-platform="ios">
+          <small>Download on the</small><strong>App Store</strong>
+        </a>
+        <a class="store-badge" href="https://play.google.com/store/apps/details?id=com.amikastudio.walk_scroll" data-event="final_cta_click" data-platform="android">
+          <small>Get it on</small><strong>Google Play</strong>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <p><strong style="color:var(--text);font-family:var(--font-display)">WalkScroll</strong><br>
+      Walk to unlock. Move to scroll. A healthier way to use your phone, by Amika Studio.</p>
+    </div>
+    <div>
+      <h3>App</h3>
+      <ul>
+        <li><a href="https://apps.apple.com/us/app/walkscroll-walk-to-unlock/id6783172097" data-event="app_store_click" data-location="footer">App Store</a></li>
+        <li><a href="https://play.google.com/store/apps/details?id=com.amikastudio.walk_scroll" data-event="app_store_click" data-location="footer">Google Play</a></li>
+        <li><a href="https://ahsankautsar.github.io/WalkScroll/support.html">Support</a></li>
+        <li><a href="https://ahsankautsar.github.io/WalkScroll/privacy-policy.html">Privacy Policy</a></li>
+        <li><a href="https://ahsankautsar.github.io/WalkScroll/terms_of_use.html">Terms of Use</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="guides/how-to-reduce-screen-time.html">Reduce Screen Time</a></li>
+        <li><a href="guides/how-to-stop-doomscrolling.html">Stop Doomscrolling</a></li>
+        <li><a href="guides/earn-screen-time-by-walking.html">Earn Screen Time by Walking</a></li>
+        <li><a href="guides/how-to-build-a-walking-habit.html">Build a Walking Habit</a></li>
+        <li><a href="guides/block-distracting-apps.html">Block Distracting Apps</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <p>© 2026 Amika Studio. WalkScroll: Walk to Unlock (iOS) · WalkScroll: Screen Time Fit (Android). Apple, the App Store, Google Play and associated marks belong to their respective owners.</p>
+  </div>
+</footer>
+
+<script src="script.js" defer></script>
 </body>
 </html>
