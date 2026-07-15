@@ -97,6 +97,49 @@
   ]
 }
 </script>
+<style>
+  /* Referral Badge Custom Styling */
+  .referral-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 255, 153, 0.1);
+    border: 1px solid rgba(0, 255, 153, 0.2);
+    border-radius: 50px;
+    padding: 8px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+    color: #ffffff;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+  }
+  .referral-badge span {
+    color: #00ff99;
+    font-weight: 700;
+  }
+  .open-app-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .btn-open-app {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #00ff99 !important;
+    text-align: center;
+    padding: 14px 28px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  .btn-open-app:hover {
+    background: rgba(0, 255, 153, 0.1);
+    border-color: #00ff99;
+    transform: translateY(-2px);
+  }
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -125,6 +168,11 @@
   <section class="hero">
     <div class="wrap">
       <div>
+        <!-- Referral Badge -->
+        <div id="referralBadge" class="referral-badge" style="display: none;">
+          🎟️ Invited by <span id="refName"></span>
+        </div>
+
         <span class="eyebrow">Free on iPhone &amp; Android</span>
         <h1><span class="hl-step">Walk</span> to unlock your apps. Earn screen time with every <span class="hl-step">step</span>.</h1>
         <p class="hero-sub">WalkScroll locks your most distracting apps — social media, video, games — and unlocks them with the steps you take. No willpower battles, no ignored timers. Move first, then scroll.</p>
@@ -139,6 +187,13 @@
           <li><span class="node node--lock">🔒 Apps lock</span></li>
           <li aria-hidden="true"><span class="link link--back"><span class="back-label">…and walk again</span></span></li>
         </ul>
+
+        <!-- Open App if already installed -->
+        <div class="open-app-container">
+          <a id="openAppBtn" class="btn-open-app" style="display: none;">
+            ▶ I already have the app — Open WalkScroll
+          </a>
+        </div>
 
         <div class="store-badges">
           <a class="store-badge" href="https://apps.apple.com/us/app/walkscroll-walk-to-unlock/id6783172097" data-event="hero_download_click" data-platform="ios">
@@ -471,5 +526,37 @@
 </footer>
 
 <script src="script.js" defer></script>
+<script>
+    // Read referral code from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref');
+
+    if (refCode) {
+        // Show referral badge
+        document.getElementById('referralBadge').style.display = 'inline-flex';
+        document.getElementById('refName').textContent = refCode;
+
+        // Show "Open App" button
+        const openAppBtn = document.getElementById('openAppBtn');
+        openAppBtn.style.display = 'inline-block';
+        openAppBtn.href = 'walkscroll://?ref=' + encodeURIComponent(refCode);
+        openAppBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'walkscroll://?ref=' + encodeURIComponent(refCode);
+        });
+
+        // Try to auto-open the app (works if installed)
+        setTimeout(function() {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = 'walkscroll://?ref=' + encodeURIComponent(refCode);
+            document.body.appendChild(iframe);
+            
+            setTimeout(function() {
+                document.body.removeChild(iframe);
+            }, 2000);
+        }, 500);
+    }
+</script>
 </body>
 </html>
