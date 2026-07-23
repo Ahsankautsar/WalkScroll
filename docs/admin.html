@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WalkScroll — Owner Admin Panel</title>
+  <link rel="icon" href="https://play-lh.googleusercontent.com/sHK9EMW0OIkxqG73v-c95TiNlYCoDKVEyoLoF025U0_0Lk1JKI9uh1vpMHjX4BbBPW8iLQls0vd5YboKGeye=w48">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    :root {
+      --primary: #10B981;
+      --primary-glow: rgba(16, 185, 129, 0.2);
+      --bg: #0A0A0C;
+      --card-bg: rgba(20, 20, 25, 0.85);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text: #F3F4F6;
+      --text-muted: #9CA3AF;
+      --accent: #FF5A5F;
+      --warning: #F59E0B;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(255, 90, 95, 0.03) 0%, transparent 40%);
+    }
+
+    header {
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1300px;
+      width: 100%;
+      margin: 0 auto;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .logo-icon {
+      width: 34px; height: 34px;
+      background: var(--primary);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: bold; color: white;
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    .logo-text {
+      font-family: var(--font-display);
+      font-size: 1.25rem; font-weight: 700; letter-spacing: -0.5px;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 0.5rem 1rem;
+      border-radius: 99px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 4px 20px var(--primary-glow);
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.1);
+    }
+
+    .btn-pay {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-pay:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    main {
+      flex: 1;
+      max-width: 1300px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* Auth Forms */
+    .auth-container {
+      max-width: 420px;
+      margin: 4rem auto;
+      padding: 2.5rem 2rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .auth-title {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .auth-subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-muted);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary);
+    }
+
+    /* Dashboard UI */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 1.5rem;
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .stat-subtext {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+
+    /* Tables */
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 1.75rem;
+      backdrop-filter: blur(12px);
+      margin-bottom: 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--card-border);
+      font-size: 0.9rem;
+    }
+
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-status {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .badge-status.paid { background: rgba(16, 185, 129, 0.15); color: var(--primary); }
+    .badge-status.pending { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 2rem;
+      max-width: 480px;
+      width: 90%;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .spinner {
+      width: 30px; height: 30px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 2rem auto;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    footer {
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="#" class="logo-container">
+      <div class="logo-icon">👑</div>
+      <div class="logo-text">WalkScroll <span style="color: var(--primary); font-size: 0.8rem;">OWNER ADMIN</span></div>
+    </a>
+    <div class="user-nav" id="user-nav" style="display: none;">
+      <span id="nav-user-email" style="font-size: 0.85rem; color: var(--text-muted);"></span>
+      <button class="btn-secondary" onclick="logout()">Logout Admin</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- SPINNER -->
+    <div id="loading-spinner" class="spinner" style="display: none;"></div>
+
+    <!-- ADMIN LOGIN FORM -->
+    <div id="auth-screen">
+      <div class="auth-container">
+        <h2 class="auth-title">Owner Login</h2>
+        <p class="auth-subtitle">Sign in to manage creators, commissions & payouts</p>
+        
+        <form onsubmit="handleAdminLogin(event)">
+          <div class="form-group">
+            <label>Admin Email</label>
+            <input type="email" id="admin-email" class="form-input" placeholder="admin@walkscroll.com" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="admin-password" class="form-input" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn-primary" style="width: 100%; margin-top: 0.5rem;">Enter Admin Panel</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD SCREEN -->
+    <div id="dashboard-screen" style="display: none;">
+      <div style="margin-bottom: 2rem;">
+        <h1 style="font-family: var(--font-display); font-size: 2rem;">Executive Dashboard</h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.25rem;">Live metrics across all creator referral campaigns</p>
+      </div>
+
+      <!-- GLOBAL METRICS GRID -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Active Creators</div>
+          <div class="stat-value" id="stat-total-creators">0</div>
+          <div class="stat-subtext">Registered influencers</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Total Referrals (Installs)</div>
+          <div class="stat-value" id="stat-total-referrals">0</div>
+          <div class="stat-subtext">App installs via creators</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Total Pro Conversions</div>
+          <div class="stat-value" style="color: var(--primary);" id="stat-total-pro">0</div>
+          <div class="stat-subtext">Subscribers via creators</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Lifetime Commissions</div>
+          <div class="stat-value" style="color: var(--text);" id="stat-lifetime-comm">$0.00</div>
+          <div class="stat-subtext">Total commission pool</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Total Paid Out</div>
+          <div class="stat-value" style="color: var(--primary);" id="stat-total-paid">$0.00</div>
+          <div class="stat-subtext">Disbursed to creators</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Pending Payouts</div>
+          <div class="stat-value" style="color: var(--warning);" id="stat-pending-payouts">$0.00</div>
+          <div class="stat-subtext">Action required</div>
+        </div>
+      </div>
+
+      <!-- CREATORS LIST TABLE -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">📊 Influencer Performance & Payouts</div>
+          <button class="btn-secondary" onclick="loadAdminData()">🔄 Refresh Data</button>
+        </div>
+        <table id="creators-table">
+          <thead>
+            <tr>
+              <th>Creator Name</th>
+              <th>Code</th>
+              <th>Pro Subs</th>
+              <th>Total Earned</th>
+              <th>Total Paid</th>
+              <th>Pending Balance</th>
+              <th>Bank / Payout Info</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="creators-table-body">
+            <!-- Creator rows -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- PAYOUT HISTORY LOG TABLE -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">📜 All Payout Transactions</div>
+        </div>
+        <table id="all-payouts-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Creator</th>
+              <th>Code</th>
+              <th>Amount</th>
+              <th>Payment Method</th>
+              <th>Reference / Note</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="all-payouts-table-body">
+            <!-- Payout log rows -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- PAYOUT PROCESS MODAL -->
+  <div id="payout-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <h2 style="font-family: var(--font-display); margin-bottom: 0.5rem;" id="modal-creator-name">Process Payout</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Record payment transfer to creator</p>
+
+      <form onsubmit="submitPayout(event)">
+        <input type="hidden" id="modal-creator-id">
+        <input type="hidden" id="modal-creator-code">
+        <input type="hidden" id="modal-creator-email">
+
+        <div class="form-group">
+          <label>Payout Amount ($ USD)</label>
+          <input type="number" step="0.01" id="modal-payout-amount" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+          <label>Payment Method</label>
+          <select id="modal-payout-method" class="form-input" style="background: rgba(0,0,0,0.6);" required>
+            <option value="Bank Transfer (BCA)">Bank Transfer (BCA)</option>
+            <option value="Bank Transfer (Mandiri)">Bank Transfer (Mandiri)</option>
+            <option value="Bank Transfer (BRI/BNI)">Bank Transfer (BRI / BNI)</option>
+            <option value="GoPay / OVO / Dana">GoPay / OVO / Dana</option>
+            <option value="PayPal / International">PayPal / International</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Transaction Reference / Note</label>
+          <input type="text" id="modal-payout-note" class="form-input" placeholder="e.g. TRX-849201" required>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="submit" class="btn-primary" style="flex: 1;">Confirm & Mark Paid</button>
+          <button type="button" class="btn-secondary" onclick="closePayoutModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 WalkScroll Owner Control Center.</p>
+  </footer>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD8rMtgA5AxZ-p2p7f8mRYLTiYE4HstvDI",
+      authDomain: "walkscroll.firebaseapp.com",
+      projectId: "walkscroll",
+      storageBucket: "walkscroll.firebasestorage.app",
+      messagingSenderId: "446733947684",
+      appId: "1:446733947684:web:f7b533a4131525c15ad9b1"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const COMMISSION_PER_SUB = 5.00;
+
+    auth.onAuthStateChanged(user => {
+      showLoading(true);
+      if (user) {
+        document.getElementById('auth-screen').style.display = 'none';
+        document.getElementById('dashboard-screen').style.display = 'block';
+        document.getElementById('user-nav').style.display = 'flex';
+        document.getElementById('nav-user-email').textContent = user.email;
+        loadAdminData();
+      } else {
+        document.getElementById('auth-screen').style.display = 'block';
+        document.getElementById('dashboard-screen').style.display = 'none';
+        document.getElementById('user-nav').style.display = 'none';
+        showLoading(false);
+      }
+    });
+
+    function showLoading(show) {
+      document.getElementById('loading-spinner').style.display = show ? 'block' : 'none';
+    }
+
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('admin-email').value.trim();
+      const password = document.getElementById('admin-password').value;
+
+      showLoading(true);
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+      } catch (err) {
+        showLoading(false);
+        alert("Admin login failed: " + err.message);
+      }
+    }
+
+    function logout() {
+      auth.signOut();
+    }
+
+    let creatorsList = [];
+    let usersList = [];
+    let payoutsList = [];
+
+    async function loadAdminData() {
+      showLoading(true);
+      try {
+        const [creatorsSnap, usersSnap, payoutsSnap] = await Promise.all([
+          db.collection('creators').get(),
+          db.collection('users').get(),
+          db.collection('payouts').get()
+        ]);
+
+        creatorsList = [];
+        creatorsSnap.forEach(d => creatorsList.push(d.data()));
+
+        usersList = [];
+        usersSnap.forEach(d => usersList.push(d.data()));
+
+        payoutsList = [];
+        payoutsSnap.forEach(d => payoutsList.push(d.data()));
+
+        renderAdminDashboard();
+        showLoading(false);
+      } catch (err) {
+        showLoading(false);
+        alert("Failed to load admin data: " + err.message);
+      }
+    }
+
+    function renderAdminDashboard() {
+      let totalReferrals = 0;
+      let totalPro = 0;
+      let lifetimeComm = 0;
+      let totalPaidOut = 0;
+
+      // Map payouts by creatorId
+      const paidByCreator = {};
+      payoutsList.forEach(p => {
+        const amount = p.amount || 0;
+        if (p.status === 'paid') {
+          totalPaidOut += amount;
+          paidByCreator[p.creatorId] = (paidByCreator[p.creatorId] || 0) + amount;
+        }
+      });
+
+      // Map users by referred_by code
+      const usersByCode = {};
+      const proByCode = {};
+
+      usersList.forEach(u => {
+        if (u.referred_by) {
+          const code = u.referred_by.toUpperCase();
+          usersByCode[code] = (usersByCode[code] || 0) + 1;
+          if (u.is_premium === true) {
+            proByCode[code] = (proByCode[code] || 0) + 1;
+            totalPro++;
+          }
+          totalReferrals++;
+        }
+      });
+
+      lifetimeComm = totalPro * COMMISSION_PER_SUB;
+      const pendingPayouts = Math.max(0, lifetimeComm - totalPaidOut);
+
+      document.getElementById('stat-total-creators').textContent = creatorsList.length;
+      document.getElementById('stat-total-referrals').textContent = totalReferrals;
+      document.getElementById('stat-total-pro').textContent = totalPro;
+      document.getElementById('stat-lifetime-comm').textContent = '$' + lifetimeComm.toFixed(2);
+      document.getElementById('stat-total-paid').textContent = '$' + totalPaidOut.toFixed(2);
+      document.getElementById('stat-pending-payouts').textContent = '$' + pendingPayouts.toFixed(2);
+
+      // Render Creators Table
+      const tbody = document.getElementById('creators-table-body');
+      tbody.innerHTML = '';
+
+      creatorsList.forEach(c => {
+        const code = c.code ? c.code.toUpperCase() : '-';
+        const proCount = proByCode[code] || 0;
+        const totalEarned = proCount * COMMISSION_PER_SUB;
+        const totalPaid = paidByCreator[c.uid] || 0;
+        const pending = Math.max(0, totalEarned - totalPaid);
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <div style="font-weight: 700;">${c.name || 'Creator'}</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">${c.email}</div>
+          </td>
+          <td><span style="font-family: var(--font-display); font-weight: 700; color: var(--accent);">${code}</span></td>
+          <td style="font-weight: 700; color: var(--primary);">${proCount}</td>
+          <td>$${totalEarned.toFixed(2)}</td>
+          <td>$${totalPaid.toFixed(2)}</td>
+          <td style="font-weight: 700; color: ${pending > 0 ? 'var(--warning)' : 'var(--text-muted)'};">$${pending.toFixed(2)}</td>
+          <td style="font-size: 0.8rem;">
+            <div><strong>${c.bankName || '-'}</strong>: ${c.bankAccount || '-'}</div>
+            <div style="color: var(--text-muted);">${c.bankHolder || '-'}</div>
+          </td>
+          <td>
+            <button class="btn-pay" onclick="openPayoutModal('${c.uid}', '${c.name}', '${code}', '${c.email}', ${pending})">💳 Pay Out</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Render Payout Log Table
+      const logBody = document.getElementById('all-payouts-table-body');
+      logBody.innerHTML = '';
+
+      payoutsList.forEach(p => {
+        let dateStr = 'Recent';
+        if (p.createdAt) {
+          dateStr = p.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${dateStr}</td>
+          <td style="font-weight: 600;">${p.creatorEmail || 'Creator'}</td>
+          <td><span style="font-family: var(--font-display); font-weight: 700; color: var(--accent);">${p.creatorCode || '-'}</span></td>
+          <td style="font-weight: 700; color: var(--primary);">$${(p.amount || 0).toFixed(2)}</td>
+          <td>${p.paymentMethod || 'Bank Transfer'}</td>
+          <td>${p.referenceNote || '-'}</td>
+          <td><span class="badge-status ${p.status}">${p.status.toUpperCase()}</span></td>
+        `;
+        logBody.appendChild(tr);
+      });
+    }
+
+    function openPayoutModal(uid, name, code, email, pendingBalance) {
+      document.getElementById('modal-creator-id').value = uid;
+      document.getElementById('modal-creator-code').value = code;
+      document.getElementById('modal-creator-email').value = email;
+      document.getElementById('modal-creator-name').textContent = "Process Payout: " + name + " (" + code + ")";
+      document.getElementById('modal-payout-amount').value = pendingBalance.toFixed(2);
+      document.getElementById('payout-modal').style.display = 'flex';
+    }
+
+    function closePayoutModal() {
+      document.getElementById('payout-modal').style.display = 'none';
+    }
+
+    async function submitPayout(e) {
+      e.preventDefault();
+      const uid = document.getElementById('modal-creator-id').value;
+      const code = document.getElementById('modal-creator-code').value;
+      const email = document.getElementById('modal-creator-email').value;
+      const amount = parseFloat(document.getElementById('modal-payout-amount').value);
+      const method = document.getElementById('modal-payout-method').value;
+      const note = document.getElementById('modal-payout-note').value.trim();
+
+      if (isNaN(amount) || amount <= 0) {
+        alert("Please enter a valid payout amount!");
+        return;
+      }
+
+      showLoading(true);
+      closePayoutModal();
+
+      try {
+        await db.collection('payouts').add({
+          creatorId: uid,
+          creatorCode: code,
+          creatorEmail: email,
+          amount: amount,
+          paymentMethod: method,
+          referenceNote: note,
+          status: 'paid',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        alert("Payout of $" + amount.toFixed(2) + " to " + code + " recorded successfully!");
+        loadAdminData();
+      } catch (err) {
+        showLoading(false);
+        alert("Failed to record payout: " + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
