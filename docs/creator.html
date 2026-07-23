@@ -7,22 +7,24 @@
   <link rel="icon" href="https://play-lh.googleusercontent.com/sHK9EMW0OIkxqG73v-c95TiNlYCoDKVEyoLoF025U0_0Lk1JKI9uh1vpMHjX4BbBPW8iLQls0vd5YboKGeye=w48">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
   <style>
     :root {
       --primary: #FF5A5F;
-      --primary-glow: rgba(255, 90, 95, 0.15);
+      --primary-glow: rgba(255, 90, 95, 0.2);
       --bg: #0A0A0C;
-      --card-bg: rgba(20, 20, 25, 0.7);
+      --card-bg: rgba(20, 20, 25, 0.75);
       --card-border: rgba(255, 255, 255, 0.08);
       --text: #F3F4F6;
       --text-muted: #9CA3AF;
       --success: #10B981;
+      --warning: #F59E0B;
       --font-display: 'Space Grotesk', sans-serif;
       --font-body: 'Plus Jakarta Sans', sans-serif;
     }
@@ -43,25 +45,28 @@
     }
 
     header {
-      padding: 2rem;
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       max-width: 1200px;
       width: 100%;
       margin: 0 auto;
+      border-bottom: 1px solid var(--card-border);
     }
 
     .logo-container {
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      text-decoration: none;
+      color: inherit;
     }
 
     .logo-icon {
-      width: 32px; height: 32px;
+      width: 34px; height: 34px;
       background: var(--primary);
-      border-radius: 8px;
+      border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
       font-weight: bold; color: white;
       box-shadow: 0 0 15px var(--primary-glow);
@@ -72,12 +77,44 @@
       font-size: 1.25rem; font-weight: 700; letter-spacing: -0.5px;
     }
 
-    .badge-dashboard {
-      background: rgba(255, 255, 255, 0.05);
+    .user-nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--card-border);
+      color: var(--text);
       padding: 0.5rem 1rem;
       border-radius: 99px;
-      font-size: 0.85rem; font-weight: 500; color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 4px 20px var(--primary-glow);
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.1);
     }
 
     main {
@@ -85,355 +122,460 @@
       max-width: 1200px;
       width: 100%;
       margin: 0 auto;
-      padding: 1.5rem;
+      padding: 2rem 1.5rem;
     }
 
-    #input-screen {
-      max-width: 480px;
-      margin: 6rem auto;
-      text-align: center;
-      padding: 3rem 2rem;
+    /* Auth Forms */
+    .auth-container {
+      max-width: 440px;
+      margin: 3rem auto;
+      padding: 2.5rem 2rem;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 24px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-      animation: fadeIn 0.6s ease-out;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     }
 
-    .input-icon {
-      font-size: 3rem;
-      margin-bottom: 1.5rem;
-      display: inline-block;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    h1 {
+    .auth-title {
       font-family: var(--font-display);
-      font-size: 2rem; font-weight: 700;
-      margin-bottom: 0.75rem; letter-spacing: -0.5px;
-    }
-
-    p.subtitle {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-bottom: 2rem;
-      line-height: 1.5;
-    }
-
-    .input-group { position: relative; margin-bottom: 1.5rem; }
-
-    .input-group input {
-      width: 100%;
-      padding: 1.2rem 1.5rem;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      color: white;
-      font-size: 1.1rem;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
       text-align: center;
-      transition: all 0.3s ease;
     }
 
-    .input-group input:focus {
-      outline: none;
-      border-color: var(--primary);
-      background: rgba(255, 90, 95, 0.02);
-      box-shadow: 0 0 15px rgba(255, 90, 95, 0.1);
-    }
-
-    .btn-submit {
-      width: 100%; padding: 1.1rem;
-      background: var(--primary); color: white; border: none;
-      border-radius: 16px; font-size: 1.1rem; font-weight: 600;
-      cursor: pointer; transition: all 0.3s ease;
-      box-shadow: 0 4px 15px var(--primary-glow);
-    }
-
-    .btn-submit:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(255, 90, 95, 0.3);
-    }
-
-    #dashboard-screen { display: none; animation: fadeIn 0.5s ease-out; }
-
-    .welcome-bar {
-      display: flex; justify-content: space-between;
-      align-items: center; margin-bottom: 2.5rem;
-      flex-wrap: wrap; gap: 1rem;
-    }
-
-    .welcome-title h2 {
-      font-family: var(--font-display);
-      font-size: 2.25rem; font-weight: 700;
-    }
-
-    .welcome-title p { color: var(--text-muted); margin-top: 0.25rem; }
-
-    .btn-logout {
-      background: rgba(255, 255, 255, 0.05);
+    .auth-subtitle {
       color: var(--text-muted);
-      border: 1px solid var(--card-border);
-      padding: 0.6rem 1.2rem;
-      border-radius: 12px; cursor: pointer;
-      font-weight: 500; transition: all 0.2s;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 2rem;
     }
 
-    .btn-logout:hover {
-      background: rgba(255, 90, 95, 0.1);
+    .form-group {
+      margin-bottom: 1.25rem;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-muted);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary);
+    }
+
+    .auth-toggle {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .auth-toggle a {
       color: var(--primary);
-      border-color: rgba(255, 90, 95, 0.2);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Dashboard UI */
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .creator-code-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 90, 95, 0.1);
+      border: 1px solid rgba(255, 90, 95, 0.3);
+      color: var(--primary);
+      padding: 0.4rem 1rem;
+      border-radius: 99px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 2px 6px;
     }
 
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.5rem; margin-bottom: 3rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
     }
 
     .stat-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
+      padding: 1.5rem;
       border-radius: 20px;
-      padding: 2rem 1.5rem;
-      position: relative; overflow: hidden;
-      transition: transform 0.3s;
+      backdrop-filter: blur(12px);
     }
-
-    .stat-card:hover { transform: translateY(-4px); }
-
-    .stat-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0;
-      width: 4px; height: 100%;
-      background: var(--card-border);
-    }
-
-    .stat-card.highlighted::before { background: var(--primary); }
 
     .stat-label {
-      font-size: 0.85rem; font-weight: 600;
+      font-size: 0.85rem;
       color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 1px;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
     }
 
     .stat-value {
       font-family: var(--font-display);
-      font-size: 2.5rem; font-weight: 700;
-      line-height: 1; margin-bottom: 0.5rem;
+      font-size: 2rem;
+      font-weight: 700;
     }
 
-    .stat-desc { font-size: 0.8rem; color: var(--text-muted); }
+    .stat-subtext {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
 
-    .table-container {
+    /* Section Tabs & Tables */
+    .section-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 24px;
-      padding: 2rem; margin-bottom: 3rem;
+      padding: 1.75rem;
+      backdrop-filter: blur(12px);
+      margin-bottom: 2rem;
     }
 
-    .table-header { margin-bottom: 1.5rem; }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
 
-    .table-header h3 {
+    .section-title {
       font-family: var(--font-display);
-      font-size: 1.25rem; font-weight: 700;
-      margin-bottom: 0.25rem;
+      font-size: 1.25rem;
+      font-weight: 700;
     }
 
-    .table-header p { font-size: 0.85rem; color: var(--text-muted); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
 
-    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--card-border);
+      font-size: 0.9rem;
+    }
 
     th {
-      padding: 1rem; color: var(--text-muted);
-      font-size: 0.85rem; font-weight: 600;
-      border-bottom: 1px solid var(--card-border);
-      text-transform: uppercase; letter-spacing: 0.5px;
-    }
-
-    td {
-      padding: 1.25rem 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
     }
 
     .badge-status {
-      display: inline-flex; align-items: center;
-      padding: 0.25rem 0.75rem; border-radius: 99px;
-      font-size: 0.75rem; font-weight: 600;
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 700;
     }
 
-    .badge-status.premium {
-      background: rgba(16, 185, 129, 0.1);
-      color: var(--success);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-    }
+    .badge-status.premium { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+    .badge-status.standard { background: rgba(255, 255, 255, 0.05); color: var(--text-muted); }
+    .badge-status.paid { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+    .badge-status.pending { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
 
-    .badge-status.standard {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-muted);
+    .bank-info-box {
+      background: rgba(0, 0, 0, 0.3);
       border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-top: 1rem;
     }
 
-    .loading-spinner {
-      display: none;
-      width: 40px; height: 40px;
-      border: 3px solid rgba(255, 90, 95, 0.1);
-      border-radius: 50%;
+    .spinner {
+      width: 30px; height: 30px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
       border-top-color: var(--primary);
-      animation: spin 1s ease-in-out infinite;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
       margin: 2rem auto;
-    }
-
-    .empty-state {
-      text-align: center; padding: 3rem 0; color: var(--text-muted);
-    }
-
-    .commission-box {
-      background: linear-gradient(135deg, rgba(255, 90, 95, 0.1) 0%, transparent 100%);
-      border: 1px solid rgba(255, 90, 95, 0.15);
-      border-radius: 20px; padding: 2rem;
-      margin-bottom: 3rem;
-      display: flex; justify-content: space-between;
-      align-items: center; flex-wrap: wrap; gap: 1.5rem;
-    }
-
-    .commission-info h4 {
-      font-family: var(--font-display);
-      font-size: 1.25rem; margin-bottom: 0.5rem;
-    }
-
-    .commission-info p {
-      color: var(--text-muted);
-      font-size: 0.9rem; line-height: 1.4;
-    }
-
-    .commission-value {
-      font-family: var(--font-display);
-      font-size: 2.75rem; font-weight: 700;
-      color: var(--primary);
-    }
-
-    footer.dashboard-footer {
-      text-align: center; padding: 2rem;
-      color: var(--text-muted); font-size: 0.85rem;
-      border-top: 1px solid var(--card-border);
-      margin-top: auto;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    @media (max-width: 768px) {
-      .welcome-bar { flex-direction: column; align-items: flex-start; }
-      .btn-logout { width: 100%; text-align: center; }
-      .commission-box { flex-direction: column; align-items: flex-start; }
-      .commission-value { font-size: 2.25rem; }
+    footer {
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
     }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="logo-container">
+    <a href="#" class="logo-container">
       <div class="logo-icon">W</div>
-      <span class="logo-text">WalkScroll</span>
+      <div class="logo-text">WalkScroll <span style="color: var(--primary); font-size: 0.8rem;">CREATOR</span></div>
+    </a>
+    <div class="user-nav" id="user-nav" style="display: none;">
+      <span id="nav-user-email" style="font-size: 0.85rem; color: var(--text-muted);"></span>
+      <button class="btn-secondary" onclick="logout()">Logout</button>
     </div>
-    <span class="badge-dashboard">Creator Program</span>
   </header>
 
   <main>
-    <!-- CODE INPUT SCREEN -->
-    <section id="input-screen">
-      <span class="input-icon">🎁</span>
-      <h1>Creator Dashboard</h1>
-      <p class="subtitle">Enter your unique referral code to check your real-time invites and premium commission statistics.</p>
-      <div class="input-group">
-        <input type="text" id="creator-code-input" placeholder="e.g. budi" autocomplete="off" spellcheck="false">
-      </div>
-      <button class="btn-submit" onclick="submitCode()">Access Dashboard</button>
-    </section>
+    <!-- SPINNER -->
+    <div id="loading-spinner" class="spinner" style="display: none;"></div>
 
-    <div class="loading-spinner" id="spinner"></div>
+    <!-- AUTH SCREEN (LOGIN / REGISTER) -->
+    <div id="auth-screen">
+      <!-- LOGIN FORM -->
+      <div id="login-box" class="auth-container">
+        <h2 class="auth-title">Creator Login</h2>
+        <p class="auth-subtitle">Access your WalkScroll referral earnings & stats</p>
+        
+        <form onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="login-email" class="form-input" placeholder="creator@gmail.com" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn-primary" style="width: 100%; margin-top: 0.5rem;">Log In</button>
+        </form>
+
+        <div class="auth-toggle">
+          Don't have a creator account? <a href="#" onclick="toggleAuthMode('register')">Register Here</a>
+        </div>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="register-box" class="auth-container" style="display: none;">
+        <h2 class="auth-title">Join Creator Program</h2>
+        <p class="auth-subtitle">Earn commissions for every user who subscribes</p>
+        
+        <form onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="reg-name" class="form-input" placeholder="Alex Rivers" required>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="reg-email" class="form-input" placeholder="creator@gmail.com" required>
+          </div>
+          <div class="form-group">
+            <label>Desired Referral Code (e.g. ALEX)</label>
+            <input type="text" id="reg-code" class="form-input" placeholder="ALEX" style="text-transform: uppercase;" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="reg-password" class="form-input" placeholder="At least 6 characters" minlength="6" required>
+          </div>
+
+          <div style="border-top: 1px solid var(--card-border); margin: 1.25rem 0; padding-top: 1rem;">
+            <label style="font-weight: 700; color: var(--text); margin-bottom: 0.75rem;">Payment / Payout Details</label>
+            <div class="form-group">
+              <label>Bank Name / e-Wallet (e.g. BCA, GoPay, Mandiri)</label>
+              <input type="text" id="reg-bank-name" class="form-input" placeholder="BCA / GoPay" required>
+            </div>
+            <div class="form-group">
+              <label>Account Number / Phone Number</label>
+              <input type="text" id="reg-bank-account" class="form-input" placeholder="1234567890" required>
+            </div>
+            <div class="form-group">
+              <label>Account Holder Name</label>
+              <input type="text" id="reg-bank-holder" class="form-input" placeholder="Name on bank account" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%;">Create Account</button>
+        </form>
+
+        <div class="auth-toggle">
+          Already registered? <a href="#" onclick="toggleAuthMode('login')">Log In Here</a>
+        </div>
+      </div>
+    </div>
 
     <!-- DASHBOARD SCREEN -->
-    <section id="dashboard-screen">
-      <div class="welcome-bar">
-        <div class="welcome-title">
-          <h2>Hello, <span id="welcome-code" style="color: var(--primary);">Creator</span>!</h2>
-          <p>Here is your real-time channel progress and payouts report.</p>
+    <div id="dashboard-screen" style="display: none;">
+      <div class="dashboard-header">
+        <div>
+          <h1 style="font-family: var(--font-display); font-size: 2rem;" id="welcome-name">Welcome!</h1>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.25rem;">
+            Your Referral Code: 
+            <span class="creator-code-badge">
+              <span id="creator-code-display">CODE</span>
+              <button class="copy-btn" onclick="copyCode()" title="Copy Code">📋 Copy</button>
+            </span>
+          </p>
         </div>
-        <button class="btn-logout" onclick="logout()">Change Code</button>
+        <div style="background: rgba(255, 255, 255, 0.05); padding: 0.75rem 1.25rem; border-radius: 16px; border: 1px solid var(--card-border);">
+          <span style="font-size: 0.8rem; color: var(--text-muted); display: block;">Commission Rate</span>
+          <span style="font-weight: 700; color: var(--success); font-size: 1.1rem;" id="commission-rate-display">$5.00 / Pro User</span>
+        </div>
       </div>
 
-      <div class="commission-box">
-        <div class="commission-info">
-          <h4>Estimated Referral Commission</h4>
-          <p>Earn a 50% commission for every premium subscriber you refer. You will receive <strong>$2.00 USD</strong> for the monthly plan or <strong>$12.00 USD</strong> for the annual plan. <br>This commission is recurring—as long as they remain subscribed, 50% of every payment is yours!</p>  <br>Payments are paid out weekly via your registered payment channel.</p> 
-        </div>
-        <div class="commission-value" id="total-commission">$0.00</div>
-      </div>
-
+      <!-- METRICS GRID -->
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-label">Total Downloads</div>
+          <div class="stat-label">Total Referrals (App Installs)</div>
           <div class="stat-value" id="stat-downloads">0</div>
-          <div class="stat-desc">Users who installed from your link</div>
+          <div class="stat-subtext">Users registered with your code</div>
         </div>
-        <div class="stat-card highlighted">
-          <div class="stat-label">Premium Subscribers</div>
-          <div class="stat-value" id="stat-premium">0</div>
-          <div class="stat-desc">Active paying members invited by you</div>
-        </div>
+
         <div class="stat-card">
-          <div class="stat-label">Conversion Rate</div>
-          <div class="stat-value" id="stat-conversion">0.0%</div>
-          <div class="stat-desc">Percentage of premium conversions</div>
+          <div class="stat-label">Pro Subscribers</div>
+          <div class="stat-value" style="color: var(--primary);" id="stat-premium">0</div>
+          <div class="stat-subtext">Converted to Paid Pro</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Total Earned</div>
+          <div class="stat-value" style="color: var(--success);" id="stat-total-earned">$0.00</div>
+          <div class="stat-subtext">Cumulative lifetime commissions</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Unpaid (Pending Payout)</div>
+          <div class="stat-value" style="color: var(--warning);" id="stat-unpaid">$0.00</div>
+          <div class="stat-subtext">To be paid out next cycle</div>
         </div>
       </div>
 
-      <div class="table-container">
-        <div class="table-header">
-          <h3>Recent Invite Referrals</h3>
-          <p>Real-time log of users registered with your code (emails obscured for privacy).</p>
+      <!-- PAYOUT & BANK INFO SECTION -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">💳 Your Payout Details</div>
+          <button class="btn-secondary" onclick="toggleEditBank()">Edit Account Info</button>
         </div>
-        <div style="overflow-x: auto;">
-          <table id="referrals-table">
-            <thead>
-              <tr>
-                <th>Registration Date</th>
-                <th>User Reference</th>
-                <th>Tier Status</th>
-              </tr>
-            </thead>
-            <tbody id="table-body"></tbody>
-          </table>
-          <div class="empty-state" id="table-empty" style="display: none;">
-            No users have registered with this code yet. Make sure your link has "?ref=YOUR_CODE" at the end!
+
+        <div id="bank-info-display">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Bank / e-Wallet</span>
+              <div style="font-weight: 600; margin-top: 0.2rem;" id="disp-bank-name">-</div>
+            </div>
+            <div>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Account Number</span>
+              <div style="font-weight: 600; margin-top: 0.2rem;" id="disp-bank-account">-</div>
+            </div>
+            <div>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Account Holder Name</span>
+              <div style="font-weight: 600; margin-top: 0.2rem;" id="disp-bank-holder">-</div>
+            </div>
           </div>
         </div>
+
+        <form id="bank-info-edit" style="display: none; margin-top: 1rem;" onsubmit="saveBankInfo(event)">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div class="form-group">
+              <label>Bank Name / e-Wallet</label>
+              <input type="text" id="edit-bank-name" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label>Account Number</label>
+              <input type="text" id="edit-bank-account" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label>Account Holder Name</label>
+              <input type="text" id="edit-bank-holder" class="form-input" required>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary" style="margin-top: 0.5rem;">Save Changes</button>
+          <button type="button" class="btn-secondary" onclick="toggleEditBank()">Cancel</button>
+        </form>
       </div>
-    </section>
+
+      <!-- PAYOUT HISTORY TABLE -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">💸 Payout History</div>
+        </div>
+        <table id="payout-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Payment Method</th>
+              <th>Status</th>
+              <th>Reference / Note</th>
+            </tr>
+          </thead>
+          <tbody id="payout-table-body">
+            <!-- Payout rows -->
+          </tbody>
+        </table>
+        <p id="payout-empty" style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 1.5rem; display: none;">No payout history yet.</p>
+      </div>
+
+      <!-- REFERRAL ACTIVITY TABLE -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">👥 Recent Referrals</div>
+        </div>
+        <table id="referrals-table">
+          <thead>
+            <tr>
+              <th>Joined Date</th>
+              <th>User Reference</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="referral-table-body">
+            <!-- Referral rows -->
+          </tbody>
+        </table>
+        <p id="referral-empty" style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 1.5rem; display: none;">No referrals tracked with your code yet.</p>
+      </div>
+
+    </div>
   </main>
 
-  <footer class="dashboard-footer">
-    <p>&copy; 2026 WalkScroll Creator Program. Powered securely by Firebase Firestore.</p>
+  <footer>
+    <p>&copy; 2026 WalkScroll Creator Program. Powered securely by Firebase.</p>
   </footer>
 
   <script>
-    // ==========================================
-    // PASTE YOUR FIREBASE CONFIGURATION HERE
-    // ==========================================
+    // FIREBASE CONFIGURATION
     const firebaseConfig = {
       apiKey: "AIzaSyD8rMtgA5AxZ-p2p7f8mRYLTiYE4HstvDI",
       authDomain: "walkscroll.firebaseapp.com",
@@ -443,163 +585,278 @@
       appId: "1:446733947684:web:f7b533a4131525c15ad9b1"
     };
 
-    const isConfigured = firebaseConfig.apiKey !== "YOUR_API_KEY";
-    if (isConfigured) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    const db = isConfigured ? firebase.firestore() : null;
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-    const COMMISSION_RATE = 5.00;
+    const COMMISSION_PER_SUB = 5.00; // $5 per Pro user
 
-    window.addEventListener('DOMContentLoaded', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get('code') || urlParams.get('ref');
-      if (code) {
-        document.getElementById('creator-code-input').value = code;
-        loadCreatorStats(code.toLowerCase().trim());
+    let currentCreatorData = null;
+
+    // Listen for Auth State Changes
+    auth.onAuthStateChanged(user => {
+      showLoading(true);
+      if (user) {
+        document.getElementById('auth-screen').style.display = 'none';
+        document.getElementById('user-nav').style.display = 'flex';
+        document.getElementById('nav-user-email').textContent = user.email;
+        loadCreatorProfile(user.uid);
+      } else {
+        document.getElementById('auth-screen').style.display = 'block';
+        document.getElementById('dashboard-screen').style.display = 'none';
+        document.getElementById('user-nav').style.display = 'none';
+        showLoading(false);
       }
     });
 
-    // Allow pressing Enter in the input field
-    document.addEventListener('DOMContentLoaded', () => {
-      const input = document.getElementById('creator-code-input');
-      if (input) {
-        input.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') submitCode();
-        });
-      }
-    });
-
-    function submitCode() {
-      const code = document.getElementById('creator-code-input').value.toLowerCase().trim();
-      if (!code) return;
-      const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?code=' + encodeURIComponent(code);
-      window.history.pushState({path:newUrl}, '', newUrl);
-      loadCreatorStats(code);
+    function showLoading(show) {
+      document.getElementById('loading-spinner').style.display = show ? 'block' : 'none';
     }
 
-    function loadCreatorStats(code) {
-      document.getElementById('input-screen').style.display = 'none';
-      document.getElementById('spinner').style.display = 'block';
+    function toggleAuthMode(mode) {
+      document.getElementById('login-box').style.display = mode === 'login' ? 'block' : 'none';
+      document.getElementById('register-box').style.display = mode === 'register' ? 'block' : 'none';
+    }
 
-      if (!db) {
-        setTimeout(() => {
-          document.getElementById('spinner').style.display = 'none';
-          document.getElementById('dashboard-screen').style.display = 'block';
-          showMockData(code);
-        }, 800);
-        return;
+    // Login Handler
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      showLoading(true);
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+      } catch (err) {
+        showLoading(false);
+        alert("Login failed: " + err.message);
       }
+    }
 
-      db.collection('users')
-        .where('referred_by', '==', code)
-        .orderBy('last_login', 'desc')
-        .limit(100)
-        .get()
-        .then((querySnapshot) => {
-          document.getElementById('spinner').style.display = 'none';
-          document.getElementById('dashboard-screen').style.display = 'block';
-          document.getElementById('welcome-code').textContent = code;
+    // Register Handler
+    async function handleRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const code = document.getElementById('reg-code').value.toUpperCase().trim();
+      const password = document.getElementById('reg-password').value;
+      const bankName = document.getElementById('reg-bank-name').value.trim();
+      const bankAccount = document.getElementById('reg-bank-account').value.trim();
+      const bankHolder = document.getElementById('reg-bank-holder').value.trim();
 
-          let downloads = 0;
-          let premiumCount = 0;
-          const tbody = document.getElementById('table-body');
-          tbody.innerHTML = '';
+      showLoading(true);
+      try {
+        // Check if referral code is taken
+        const codeQuery = await db.collection('creators').where('code', '==', code).get();
+        if (!codeQuery.empty) {
+          showLoading(false);
+          alert("Referral code '" + code + "' is already taken! Please choose another.");
+          return;
+        }
 
-          querySnapshot.forEach((doc) => {
-            downloads++;
-            const data = doc.data();
-            const isPremium = data.is_premium === true;
-            if (isPremium) premiumCount++;
+        // Create Firebase Auth user
+        const res = await auth.createUserWithEmailAndPassword(email, password);
+        const uid = res.user.uid;
 
-            let dateStr = 'Unknown Date';
-            if (data.last_login) {
-              const date = data.last_login.toDate();
-              dateStr = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-            }
-
-            let userRef = 'WalkScroll User';
-            if (data.email) {
-              const parts = data.email.split('@');
-              const local = parts[0];
-              const domain = parts[1];
-              userRef = local.substring(0, Math.min(3, local.length)) + '***@' + domain;
-            } else if (data.name) {
-              const nameParts = data.name.split(' ');
-              userRef = nameParts[0] + ' ' + (nameParts[1] ? nameParts[1][0] + '.' : '');
-            } else {
-              userRef = 'Guest User #' + doc.id.substring(doc.id.length - 4);
-            }
-
-            const tr = document.createElement('tr');
-            tr.innerHTML = '<td>' + dateStr + '</td>' +
-              '<td style="font-weight:500;">' + userRef + '</td>' +
-              '<td><span class="badge-status ' + (isPremium ? 'premium' : 'standard') + '">' +
-              (isPremium ? '★ PREMIUM' : 'FREE TIER') + '</span></td>';
-            tbody.appendChild(tr);
-          });
-
-          const conversionRate = downloads > 0 ? ((premiumCount / downloads) * 100).toFixed(1) : '0.0';
-          const earnings = premiumCount * COMMISSION_RATE;
-
-          document.getElementById('stat-downloads').textContent = downloads;
-          document.getElementById('stat-premium').textContent = premiumCount;
-          document.getElementById('stat-conversion').textContent = conversionRate + '%';
-          document.getElementById('total-commission').textContent = '$' + earnings.toFixed(2);
-
-          if (downloads === 0) {
-            document.getElementById('referrals-table').style.display = 'none';
-            document.getElementById('table-empty').style.display = 'block';
-          } else {
-            document.getElementById('referrals-table').style.display = 'table';
-            document.getElementById('table-empty').style.display = 'none';
-          }
-        })
-        .catch((error) => {
-          document.getElementById('spinner').style.display = 'none';
-          document.getElementById('input-screen').style.display = 'block';
-          alert("Error loading stats: " + error.message);
+        // Save Creator Profile to Firestore
+        await db.collection('creators').doc(uid).set({
+          uid: uid,
+          name: name,
+          email: email,
+          code: code,
+          bankName: bankName,
+          bankAccount: bankAccount,
+          bankHolder: bankHolder,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
+
+      } catch (err) {
+        showLoading(false);
+        alert("Registration failed: " + err.message);
+      }
     }
 
     function logout() {
-      const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-      window.history.pushState({path:newUrl}, '', newUrl);
-      document.getElementById('dashboard-screen').style.display = 'none';
-      document.getElementById('input-screen').style.display = 'block';
-      document.getElementById('creator-code-input').value = '';
+      auth.signOut();
     }
 
-    function showMockData(code) {
-      document.getElementById('welcome-code').textContent = code;
-      const mockDownloads = 42;
-      const mockPremium = 7;
-      const conversionRate = ((mockPremium / mockDownloads) * 100).toFixed(1);
-      const earnings = mockPremium * COMMISSION_RATE;
+    // Load Creator Profile & Stats
+    async function loadCreatorProfile(uid) {
+      try {
+        const doc = await db.collection('creators').doc(uid).get();
+        if (!doc.exists) {
+          alert("Creator profile not found!");
+          auth.signOut();
+          return;
+        }
 
-      document.getElementById('stat-downloads').textContent = mockDownloads;
-      document.getElementById('stat-premium').textContent = mockPremium;
-      document.getElementById('stat-conversion').textContent = conversionRate + '%';
-      document.getElementById('total-commission').textContent = '$' + earnings.toFixed(2);
+        currentCreatorData = doc.data();
+        const code = currentCreatorData.code;
 
-      const tbody = document.getElementById('table-body');
+        document.getElementById('welcome-name').textContent = "Welcome, " + (currentCreatorData.name || "Creator") + "!";
+        document.getElementById('creator-code-display').textContent = code;
+        
+        // Display Bank Info
+        document.getElementById('disp-bank-name').textContent = currentCreatorData.bankName || "-";
+        document.getElementById('disp-bank-account').textContent = currentCreatorData.bankAccount || "-";
+        document.getElementById('disp-bank-holder').textContent = currentCreatorData.bankHolder || "-";
+
+        document.getElementById('edit-bank-name').value = currentCreatorData.bankName || "";
+        document.getElementById('edit-bank-account').value = currentCreatorData.bankAccount || "";
+        document.getElementById('edit-bank-holder').value = currentCreatorData.bankHolder || "";
+
+        // Fetch Referrals & Payouts
+        await Promise.all([
+          loadReferrals(code),
+          loadPayouts(uid)
+        ]);
+
+        document.getElementById('dashboard-screen').style.display = 'block';
+        showLoading(false);
+
+      } catch (err) {
+        showLoading(false);
+        console.error("Error loading creator data:", err);
+      }
+    }
+
+    // Fetch Referrals from `users` collection
+    async function loadReferrals(code) {
+      const snap = await db.collection('users').where('referred_by', '==', code).get();
+      
+      let downloads = 0;
+      let premiumCount = 0;
+      const tbody = document.getElementById('referral-table-body');
       tbody.innerHTML = '';
-      const mockUsers = [
-        { date: 'Jul 15, 2026', ref: 'ahm***@gmail.com', premium: true },
-        { date: 'Jul 14, 2026', ref: 'Guest User #a8f3', premium: false },
-        { date: 'Jul 14, 2026', ref: 'sit***@yahoo.com', premium: true },
-        { date: 'Jul 12, 2026', ref: 'riz***@gmail.com', premium: false },
-        { date: 'Jul 10, 2026', ref: 'Guest User #e2c1', premium: false },
-      ];
 
-      mockUsers.forEach(u => {
+      snap.forEach(doc => {
+        downloads++;
+        const data = doc.data();
+        const isPremium = data.is_premium === true;
+        if (isPremium) premiumCount++;
+
+        let dateStr = 'Recent';
+        if (data.last_login) {
+          const date = data.last_login.toDate();
+          dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        let userRef = 'WalkScroll User';
+        if (data.email) {
+          const parts = data.email.split('@');
+          userRef = parts[0].substring(0, 3) + '***@' + parts[1];
+        } else {
+          userRef = 'User #' + doc.id.substring(doc.id.length - 4);
+        }
+
         const tr = document.createElement('tr');
-        tr.innerHTML = '<td>' + u.date + '</td>' +
-          '<td style="font-weight:500;">' + u.ref + '</td>' +
-          '<td><span class="badge-status ' + (u.premium ? 'premium' : 'standard') + '">' +
-          (u.premium ? '★ PREMIUM' : 'FREE TIER') + '</span></td>';
+        tr.innerHTML = `
+          <td>${dateStr}</td>
+          <td style="font-weight: 600;">${userRef}</td>
+          <td><span class="badge-status ${isPremium ? 'premium' : 'standard'}">${isPremium ? '★ PRO SUBSCRIBER' : 'FREE TIER'}</span></td>
+        `;
         tbody.appendChild(tr);
       });
+
+      const totalEarned = premiumCount * COMMISSION_PER_SUB;
+
+      document.getElementById('stat-downloads').textContent = downloads;
+      document.getElementById('stat-premium').textContent = premiumCount;
+      document.getElementById('stat-total-earned').textContent = '$' + totalEarned.toFixed(2);
+
+      document.getElementById('referrals-table').style.display = downloads > 0 ? 'table' : 'none';
+      document.getElementById('referral-empty').style.display = downloads === 0 ? 'block' : 'none';
+
+      // Store total earned on window for payout calc
+      window.currentTotalEarned = totalEarned;
+      updateUnpaidBalance();
+    }
+
+    // Fetch Payout History
+    async function loadPayouts(uid) {
+      const snap = await db.collection('payouts').where('creatorId', '==', uid).get();
+      
+      let totalPaid = 0;
+      const tbody = document.getElementById('payout-table-body');
+      tbody.innerHTML = '';
+
+      snap.forEach(doc => {
+        const p = doc.data();
+        const amount = p.amount || 0;
+        if (p.status === 'paid') totalPaid += amount;
+
+        let dateStr = 'Recent';
+        if (p.createdAt) {
+          dateStr = p.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${dateStr}</td>
+          <td style="font-weight: 700; color: var(--success);">$${amount.toFixed(2)}</td>
+          <td>${p.paymentMethod || 'Bank Transfer'}</td>
+          <td><span class="badge-status ${p.status}">${p.status.toUpperCase()}</span></td>
+          <td>${p.referenceNote || '-'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      window.currentTotalPaid = totalPaid;
+      document.getElementById('payout-table').style.display = snap.size > 0 ? 'table' : 'none';
+      document.getElementById('payout-empty').style.display = snap.size === 0 ? 'block' : 'none';
+      
+      updateUnpaidBalance();
+    }
+
+    function updateUnpaidBalance() {
+      const earned = window.currentTotalEarned || 0;
+      const paid = window.currentTotalPaid || 0;
+      const unpaid = Math.max(0, earned - paid);
+      document.getElementById('stat-unpaid').textContent = '$' + unpaid.toFixed(2);
+    }
+
+    function toggleEditBank() {
+      const disp = document.getElementById('bank-info-display');
+      const edit = document.getElementById('bank-info-edit');
+      const isEditing = edit.style.display === 'block';
+
+      disp.style.display = isEditing ? 'block' : 'none';
+      edit.style.display = isEditing ? 'none' : 'block';
+    }
+
+    async function saveBankInfo(e) {
+      e.preventDefault();
+      if (!auth.currentUser) return;
+
+      const bankName = document.getElementById('edit-bank-name').value.trim();
+      const bankAccount = document.getElementById('edit-bank-account').value.trim();
+      const bankHolder = document.getElementById('edit-bank-holder').value.trim();
+
+      showLoading(true);
+      try {
+        await db.collection('creators').doc(auth.currentUser.uid).update({
+          bankName: bankName,
+          bankAccount: bankAccount,
+          bankHolder: bankHolder
+        });
+
+        document.getElementById('disp-bank-name').textContent = bankName;
+        document.getElementById('disp-bank-account').textContent = bankAccount;
+        document.getElementById('disp-bank-holder').textContent = bankHolder;
+
+        toggleEditBank();
+        showLoading(false);
+        alert("Bank information updated successfully!");
+      } catch (err) {
+        showLoading(false);
+        alert("Failed to update bank info: " + err.message);
+      }
+    }
+
+    function copyCode() {
+      const code = document.getElementById('creator-code-display').textContent;
+      navigator.clipboard.writeText(code);
+      alert("Referral code '" + code + "' copied to clipboard!");
     }
   </script>
 </body>
