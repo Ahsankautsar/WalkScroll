@@ -605,6 +605,7 @@
       // Map users by referred_by code
       const usersByCode = {};
       const proByCode = {};
+      const earnedByCode = {};
 
       usersList.forEach(u => {
         if (u.referred_by) {
@@ -613,12 +614,16 @@
           if (u.is_premium === true) {
             proByCode[code] = (proByCode[code] || 0) + 1;
             totalPro++;
+
+            const plan = (u.plan_type || 'monthly').toLowerCase();
+            const comm = (plan === 'yearly') ? 12.00 : 2.00;
+            earnedByCode[code] = (earnedByCode[code] || 0) + comm;
+            lifetimeComm += comm;
           }
           totalReferrals++;
         }
       });
 
-      lifetimeComm = totalPro * COMMISSION_PER_SUB;
       const pendingPayouts = Math.max(0, lifetimeComm - totalPaidOut);
 
       document.getElementById('stat-total-creators').textContent = creatorsList.length;
@@ -635,7 +640,7 @@
       creatorsList.forEach(c => {
         const code = c.code ? c.code.toUpperCase() : '-';
         const proCount = proByCode[code] || 0;
-        const totalEarned = proCount * COMMISSION_PER_SUB;
+        const totalEarned = earnedByCode[code] || 0;
         const totalPaid = paidByCreator[c.uid] || 0;
         const pending = Math.max(0, totalEarned - totalPaid);
 
