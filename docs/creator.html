@@ -589,7 +589,7 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    const COMMISSION_PER_SUB = 1.67; // $1.67 per Pro user
+    const COMMISSION_PER_SUB = 5.00; // $5 per Pro user
 
     let currentCreatorData = null;
 
@@ -726,6 +726,7 @@
       
       let downloads = 0;
       let premiumCount = 0;
+      let totalEarned = 0;
       const tbody = document.getElementById('referral-table-body');
       tbody.innerHTML = '';
 
@@ -733,7 +734,23 @@
         downloads++;
         const data = doc.data();
         const isPremium = data.is_premium === true;
-        if (isPremium) premiumCount++;
+        const planType = (data.plan_type || 'monthly').toLowerCase();
+
+        let badgeText = 'FREE TIER';
+        let badgeClass = 'standard';
+
+        if (isPremium) {
+          premiumCount++;
+          if (planType === 'yearly') {
+            badgeText = '★ PRO (YEARLY)';
+            badgeClass = 'premium';
+            totalEarned += 12.00; // ~50% of $23.99
+          } else {
+            badgeText = '★ PRO (MONTHLY)';
+            badgeClass = 'premium';
+            totalEarned += 2.00; // ~50% of $3.99
+          }
+        }
 
         let dateStr = 'Recent';
         if (data.last_login) {
@@ -753,12 +770,10 @@
         tr.innerHTML = `
           <td>${dateStr}</td>
           <td style="font-weight: 600;">${userRef}</td>
-          <td><span class="badge-status ${isPremium ? 'premium' : 'standard'}">${isPremium ? '★ PRO SUBSCRIBER' : 'FREE TIER'}</span></td>
+          <td><span class="badge-status ${badgeClass}">${badgeText}</span></td>
         `;
         tbody.appendChild(tr);
       });
-
-      const totalEarned = premiumCount * COMMISSION_PER_SUB;
 
       document.getElementById('stat-downloads').textContent = downloads;
       document.getElementById('stat-premium').textContent = premiumCount;
